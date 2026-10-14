@@ -1,0 +1,175 @@
+/* ==========================================================================
+   HAIL MARY MISSION CONTROL
+   Vacuum black, Petrova-line amber, Xenonite cyan. No rounded rectangles:
+   everything is a hexagon or a chamfered panel built with clip-path.
+   ========================================================================== */
+:root{
+  --bg:#050505; --amber:#FFAA00; --cyan:#00F0FF; --ink:#e6f4f6; --mute:#7f98a0;
+  --head:'Chakra Petch',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  /* The hexagon from the brief */
+  --hex:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:84px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.7 var(--mono);overflow-x:hidden}
+/* Cinematic atmosphere: a strong cyan bloom behind the Moon, a warm amber glow bottom-left */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 1000px 900px at 75% 50%,rgba(0,240,255,.15),transparent 70%),
+             radial-gradient(ellipse 800px 600px at 20% 90%,rgba(255,170,0,.09),transparent 65%)}
+/* When the layout stacks, the Moon sits at the top centre, so the bloom follows it */
+@media(max-width:960px){
+  body::before{background:radial-gradient(ellipse 700px 650px at 50% 26%,rgba(0,240,255,.15),transparent 70%),
+                          radial-gradient(ellipse 600px 500px at 20% 92%,rgba(255,170,0,.09),transparent 65%)}}
+/* CRT glass: 1px dark / 1px clear scanlines plus a faint screen-edge vignette, above everything and untouchable */
+body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 1px,rgba(0,0,0,.2) 1px,rgba(0,0,0,.2) 2px),
+             radial-gradient(ellipse at center,transparent 62%,rgba(0,0,0,.38) 100%)}
+#hexgrid,#wavefx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#hexgrid{z-index:-1}
+#wavefx{z-index:60}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+/* ---------- Navigation ---------- */
+.nav{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:12px clamp(16px,4vw,48px);background:rgba(5,5,5,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(0,240,255,.16)}
+.logo{font:700 20px var(--head);letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--amber);margin:0 4px}
+.nav nav{display:flex;gap:10px;align-items:center}
+/* Small elongated hexagon used for links and secondary buttons */
+.hexlink{--cut:12px;display:inline-block;border:0;cursor:pointer;padding:11px 26px;text-decoration:none;
+  font:500 12px var(--head);letter-spacing:.16em;color:var(--cyan);background:rgba(0,240,255,.09);
+  clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% 50%,calc(100% - var(--cut)) 100%,var(--cut) 100%,0 50%);
+  transition:background .2s,color .2s}
+.hexlink:hover,.hexlink:focus-visible{background:var(--amber);color:#120a00;outline:none}
+.hexlink.solid{background:var(--amber);color:#120a00;font-weight:700}
+.hexlink.solid:hover,.hexlink.solid:focus-visible{background:var(--cyan)}
+@media(max-width:760px){.hide-sm{display:none}}
+
+/* ---------- Chamfered glass panel (angled corners, 1px cyan edge) ---------- */
+.panel{--c:26px;position:relative;padding:22px 26px;background:rgba(8,20,26,.55);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)))}
+/* The edge: the outer outline minus an inner outline (even-odd), so the diagonals get a border too */
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:rgba(0,240,255,.6);
+  clip-path:polygon(evenodd,
+    0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,var(--c) 100%,0 calc(100% - var(--c)),0 0,
+    1px 1px,calc(100% - var(--c) - .4px) 1px,calc(100% - 1px) calc(var(--c) + .4px),calc(100% - 1px) calc(100% - 1px),
+    calc(var(--c) + .4px) calc(100% - 1px),1px calc(100% - var(--c) - .4px),1px 1px,0 0)}
+.panel.big{padding:clamp(22px,3vw,40px)}
+
+/* ---------- Type ---------- */
+.eyebrow{margin:0 0 6px;font:500 12px var(--mono);letter-spacing:.22em;color:var(--cyan)}
+h2{margin:0 0 22px;font:700 clamp(30px,5vw,56px)/1 var(--head);letter-spacing:.02em}
+.mute{color:var(--mute);font-weight:500;font-size:.6em;letter-spacing:.12em}
+
+/* ---------- Hero ---------- */
+.hero{max-width:1280px;margin:0 auto;min-height:calc(100vh - 62px);padding:48px clamp(16px,4vw,48px) 40px;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:32px;align-items:center}
+@media(max-width:960px){.hero{grid-template-columns:1fr;min-height:0}.moon-col{order:-1}}
+.tag{margin:0 0 14px;font:500 12px var(--mono);letter-spacing:.2em;color:var(--cyan)}
+.title{margin:0;font:700 clamp(54px,9.5vw,148px)/.88 var(--head);text-transform:uppercase}
+.title span{display:block}
+.amber{color:var(--amber);text-shadow:0 0 40px rgba(255,170,0,.35)}
+.sub{max-width:560px;margin:22px 0 0;color:var(--mute);font-size:13px;letter-spacing:.06em}
+.cursor{display:inline-block;width:8px;height:15px;margin-left:6px;vertical-align:-2px;background:var(--amber);animation:blink 1s steps(2) infinite}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:28px 32px;margin-top:16px}
+
+/* ---------- Countdown ---------- */
+.countdown{flex:1 1 340px;max-width:470px}
+.countdown .label,.countdown .units{margin:0;font-size:11px;letter-spacing:.2em;color:var(--cyan)}
+.countdown .digits{margin:6px 0;font:700 clamp(22px,3.5vw,40px)/1.1 var(--mono);color:var(--amber);
+  font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(255,170,0,.4);white-space:nowrap;
+  /* Two unrelated cycle lengths (6.7s and 4.3s) drift in and out of phase, so the dropouts never feel periodic */
+  animation:telemetry-flicker 6.7s linear infinite,telemetry-glitch 4.3s linear infinite}
+.countdown .units{color:var(--mute)}
+
+/* ---------- Hexagonal RSVP button ---------- */
+/* clip-path would cut off a box-shadow, so the glow is a drop-shadow filter on the unclipped wrapper */
+.hexbtn-wrap{flex:0 0 auto;
+  filter:drop-shadow(0 0 8px rgba(255,170,0,.5)) drop-shadow(0 0 24px rgba(255,170,0,.28));
+  transition:filter .3s;animation:breathe 3.4s ease-in-out infinite}
+.hexbtn-wrap:has(.hexbtn:hover),.hexbtn-wrap:has(.hexbtn:focus-visible){animation:none;
+  filter:drop-shadow(0 0 10px #FFAA00) drop-shadow(0 0 34px #FFAA00) drop-shadow(0 0 80px rgba(255,170,0,.9)) drop-shadow(0 0 150px rgba(255,170,0,.6))}
+.hexbtn{position:relative;display:block;width:200px;aspect-ratio:200/173.2;padding:0;border:0;cursor:pointer;
+  background:var(--amber);clip-path:var(--hex);color:var(--amber);font-family:var(--head)}
+.hexbtn::before{content:"";position:absolute;inset:3px;clip-path:var(--hex);background:linear-gradient(160deg,#2b1a00,#100800);transition:background .25s}
+.hexbtn-txt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;transition:color .25s}
+.hexbtn-txt b{font:700 40px/1 var(--head);letter-spacing:.08em}
+.hexbtn-txt small{margin-top:6px;font:500 11px var(--mono);letter-spacing:.3em}
+.hexbtn:hover::before,.hexbtn:focus-visible::before{background:var(--amber)}
+.hexbtn:hover .hexbtn-txt,.hexbtn:focus-visible .hexbtn-txt{color:#100800}
+.hexbtn:focus-visible{outline:none}
+
+/* ---------- Moon + sensor HUD ---------- */
+.moon-col{min-width:0}
+.moon{position:relative;width:100%;max-width:560px;aspect-ratio:1;margin:0 auto;cursor:grab;touch-action:pan-y;user-select:none;
+  filter:drop-shadow(0 0 45px rgba(0,240,255,.15))}
+.moon canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.ring{fill:none;stroke:var(--cyan);vector-effect:non-scaling-stroke}
+.ring.thin{stroke-width:1;opacity:.6}
+.ring.dash{stroke-width:1;stroke-dasharray:2 5;opacity:.85}
+.ring.ticks{stroke:var(--amber);stroke-width:1.4;stroke-dasharray:.35 2.25;opacity:.9;vector-effect:none}
+.spin{transform-origin:50px 50px;animation:spin 90s linear infinite}
+.spin.rev{animation-direction:reverse;animation-duration:140s}
+.cross{stroke:var(--amber);stroke-width:1.2;vector-effect:non-scaling-stroke;opacity:.8}
+.rd{position:absolute;font:500 10.5px var(--mono);letter-spacing:.14em;color:var(--cyan);opacity:.85;pointer-events:none}
+.rd.tl{top:1%;left:0}.rd.tr{top:1%;right:0}.rd.bl{bottom:1%;left:0}.rd.br{bottom:1%;right:0}
+.fallback{display:none;position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d8dde0,#4b5358)}
+.moon.no-gl .fallback{display:block}
+.hint{margin:10px 0 0;text-align:center;font-size:11px;letter-spacing:.2em;color:var(--mute)}
+
+/* ---------- Sections ---------- */
+section:not(.hero){max-width:1100px;margin:0 auto;padding:90px clamp(16px,4vw,48px) 10px}
+.data{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px 40px;margin:0}
+.data dt{font:500 11px var(--mono);letter-spacing:.22em;color:var(--cyan)}
+.data dd{margin:4px 0 0;font:600 clamp(20px,2.4vw,28px)/1.2 var(--head);letter-spacing:.04em}
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.tl li{padding:20px 22px 22px;background:rgba(0,240,255,.045);border-top:2px solid rgba(0,240,255,.4)}
+.tl time{display:inline-block;padding-left:22px;position:relative;font:500 12px var(--mono);letter-spacing:.14em;color:var(--amber)}
+.tl time::before{content:"";position:absolute;left:0;top:50%;width:14px;height:12.1px;margin-top:-6px;background:var(--amber);clip-path:var(--hex)}
+.tl h3{margin:8px 0 4px;font:600 22px var(--head);letter-spacing:.04em}
+.tl p{margin:0;color:var(--mute);font-size:13px}
+footer{padding:80px 16px 40px;text-align:center;font-size:11px;letter-spacing:.24em;color:var(--mute)}
+
+/* ---------- RSVP dialog ---------- */
+dialog{width:min(560px,92vw);padding:0;border:0;background:transparent;color:var(--ink);overflow:visible}
+dialog::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(5px)}
+.dlg{background:rgba(8,20,26,.92)}
+.dlg h2{margin-bottom:16px}
+.dlg label{display:block;margin:14px 0 5px;font:500 11px var(--mono);letter-spacing:.2em;color:var(--cyan)}
+.dlg input{display:block;width:100%;padding:12px 14px;border:0;color:var(--ink);font:500 15px var(--mono);
+  background:rgba(0,240,255,.08);box-shadow:inset 0 -2px 0 rgba(0,240,255,.35);
+  clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px)}
+.dlg input:focus{outline:none;background:rgba(0,240,255,.16);box-shadow:inset 0 -2px 0 var(--amber)}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.ack{margin:18px 0 0;color:var(--amber);font-weight:700;letter-spacing:.06em}
+
+/* ---------- Motion ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s}
+.rv.on{opacity:1;transform:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{50%{opacity:0}}
+/* Brief signal dropouts: each dip lasts roughly 50-130 ms */
+@keyframes telemetry-flicker{
+  0%,6.4%,8.8%,40.6%,42.4%,72.6%,75%,100%{opacity:1}
+  7%{opacity:.5}7.6%{opacity:.95}8.2%{opacity:.72}
+  41%{opacity:.38}41.8%{opacity:.9}
+  73%{opacity:.62}73.6%{opacity:1}74.2%{opacity:.8}}
+/* Glow collapses and the glyphs briefly split into cyan / red fringes, like a raw unstable feed */
+@keyframes telemetry-glitch{
+  0%,22.4%,24.4%,60.4%,62.4%,100%{text-shadow:0 0 18px rgba(255,170,0,.4)}
+  23%{text-shadow:-2px 0 rgba(0,240,255,.55),2px 0 rgba(255,60,0,.45),0 0 4px rgba(255,170,0,.15)}
+  23.8%{text-shadow:0 0 6px rgba(255,170,0,.2)}
+  61%{text-shadow:2px 0 rgba(0,240,255,.5),-2px 0 rgba(255,60,0,.4),0 0 3px rgba(255,170,0,.1)}}
+@keyframes breathe{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(255,170,0,.5)) drop-shadow(0 0 24px rgba(255,170,0,.28))}
+  50%{filter:drop-shadow(0 0 14px rgba(255,170,0,.8)) drop-shadow(0 0 38px rgba(255,170,0,.45))}}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}}
